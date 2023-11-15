@@ -1,87 +1,13 @@
 package com.teste.primeiroprojeto.repository;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.teste.primeiroprojeto.model.Produto;
-import com.teste.primeiroprojeto.model.exception.ResourceNotFoundException;
 
 
-//dizendo pro spring que isso é um repositório
 @Repository
-public class ProdutoRepository {
-    
-    /**
-     *
-     */
-    private List<Produto> produtos= new ArrayList<Produto>();
-    private Integer ultimoId=0;
+public interface ProdutoRepository extends JpaRepository<Produto, Integer>{
 
-
-    /**
-     * método para retornar uma lista de produtos
-     * @return lista de produtos.
-     */
-    public List<Produto> obterTodos(){
-        return produtos;
-    }
-
-    /**
-     * Verifica e retorna o primeiro produto dentro do array que tem o mesmo id que eu passei como parâmetro do método.
-     * Optional:Classe para retornar um null caso n tenha id no array.
-     * @param id do produto que será localizado.
-     * @return retorna um produto caso seja encontrado.
-     */
-    public Optional<Produto> obterPorId(Integer id){
-        return produtos.stream()
-        .filter(produto ->produto.getId()==id)
-        .findFirst();
-    }
-
-
-    /**
-     * Método para adicionar produto na lista.
-     * @param produto que será adicionado.
-     * @return Retorna o produto que foi adicionado.
-     */
-    public Produto adicionar(Produto produto){
-        
-        ultimoId++;
-
-        produto.setId(ultimoId);
-        produtos.add(produto);
-        return produto;
-    }
-    /**
-     * Método para deletar produto por id.
-     * @param id do produto a ser deletado.
-     */
-    public void deletar(Integer id){
-        produtos.removeIf(produto->produto.getId()==id);//remove se o id do produto for igual a algum produto que está dentro do array
-    }
-
-    /**
-     * Método para atualizar produto na lista.
-     * @param produto Produto atualizado.
-     * @return Retorna produto atualizado na lista.
-     */
-    public Produto atualizar(Produto produto){
-        //Encontrar produto
-        Optional <Produto> produtoEncontrado=obterPorId(ultimoId);
-        //se não encontrar
-        if(produtoEncontrado.isEmpty()){
-            throw new ResourceNotFoundException("Produto não encontrado!!! ");
-        }
-        //remover o antigo produto
-        deletar(produto.getId());
-
-        //adicionar o novo produto.
-        produtos.add(produto);
-        return produto;
-
-    }
+//uma interface que herda de outra interface genérica do jpa, recebe dois parâmetros, o model e o tipo do Id desse objeto
 }
